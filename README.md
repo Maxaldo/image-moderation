@@ -47,5 +47,6 @@ src/
 
 ## Auteurs
 
-- Max SOGBOSSI
+- Max
+- 
 - Jean
