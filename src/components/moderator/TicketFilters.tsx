@@ -1,32 +1,33 @@
-import React from 'react';
+import { type TicketStatus } from '../../models/Ticket';
 
-// On définit les propriétés (props) que ce composant va recevoir
+type FilterValue = 'all' | TicketStatus;
+
 interface TicketFiltersProps {
-    currentFilter: 'all' | 'open' | 'resolved';
-    setFilter: (filter: 'all' | 'open' | 'resolved') => void;
+    currentFilter: FilterValue;
+    setFilter: (filter: FilterValue) => void;
 }
 
-export const TicketFilters: React.FC<TicketFiltersProps> = ({ currentFilter, setFilter }) => {
+export default function TicketFilters({ currentFilter, setFilter }: TicketFiltersProps) {
     return (
-        <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+        <div className="ticket-filters">
             <button
+                className={currentFilter === 'all' ? 'active' : ''}
                 onClick={() => setFilter('all')}
-                style={{ fontWeight: currentFilter === 'all' ? 'bold' : 'normal' }}
             >
                 Tous
             </button>
             <button
-                onClick={() => setFilter('open')}
-                style={{ fontWeight: currentFilter === 'open' ? 'bold' : 'normal' }}
+                className={currentFilter === 'open' ? 'active' : ''}
+                onClick={() => setFilter('open' as TicketStatus)}
             >
                 Ouverts
             </button>
             <button
-                onClick={() => setFilter('resolved')}
-                style={{ fontWeight: currentFilter === 'resolved' ? 'bold' : 'normal' }}
+                className={currentFilter === 'resolved' ? 'active' : ''}
+                onClick={() => setFilter('resolved' as TicketStatus)}
             >
                 Résolus
             </button>
         </div>
     );
-};
+}

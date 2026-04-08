@@ -1,40 +1,34 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TicketFilters } from './TicketFilters';
-// import { useStore } from '../../store/useStore'; // À décommenter plus tard
-// import { formatDate } from '../../services/ticketService'; // Ton super helper de la tâche B1 !
+import { useStore } from '../../store/useStore';
+import { type TicketStatus } from '../../models/Ticket';
+import { formatDate } from '../../services/ticketService';
+import TicketFilters from './TicketFilters';
 
-export const TicketList: React.FC = () => {
-    // L'état local pour gérer le filtre sélectionné
-    const [filter, setFilter] = useState<'all' | 'open' | 'resolved'>('all');
+type FilterValue = 'all' | TicketStatus;
 
-    // Remplacement temporaire en attendant Zustand
-    // const tickets = useStore((state) => state.tickets);
-    const tickets: any[] = []; // Tableau vide pour éviter les erreurs de compilation
+export default function TicketList() {
+    const [filter, setFilter] = useState<FilterValue>('all');
+    const tickets = useStore((state) => state.tickets);
 
-    // Logique de filtrage
-    const filteredTickets = tickets.filter(ticket => {
+    const filteredTickets = tickets.filter((ticket) => {
         if (filter === 'all') return true;
         return ticket.status === filter;
     });
 
     return (
-        <div>
-            <h2>Liste des Tickets de Modération</h2>
-
-            {/* Ton composant de filtrage */}
+        <div className="ticket-list">
+            <h2>Liste des tickets de modération</h2>
             <TicketFilters currentFilter={filter} setFilter={setFilter} />
 
-            <div style={{ display: 'grid', gap: '15px' }}>
+            <div className="ticket-grid">
                 {filteredTickets.length > 0 ? (
-                    filteredTickets.map(ticket => (
-                        <div key={ticket.id} style={{ border: '1px solid #ccc', padding: '15px', borderRadius: '8px' }}>
+                    filteredTickets.map((ticket) => (
+                        <div key={ticket.id} className="ticket-card">
                             <p><strong>Raison :</strong> {ticket.reason}</p>
                             <p><strong>Statut :</strong> {ticket.status}</p>
-                            <p><strong>Date :</strong> {/* formatDate(ticket.createdAt) */ 'Date à formater'}</p>
-
-                            {/* Le lien vers le détail, qui sera configuré dans le routing global */}
-                            <Link to={`/moderation/${ticket.id}`} style={{ color: 'blue', textDecoration: 'underline' }}>
+                            <p><strong>Date :</strong> {formatDate(ticket.createdAt)}</p>
+                            <Link to={`/moderation/${ticket.id}`}>
                                 Voir le détail
                             </Link>
                         </div>
@@ -45,4 +39,4 @@ export const TicketList: React.FC = () => {
             </div>
         </div>
     );
-};
+}
